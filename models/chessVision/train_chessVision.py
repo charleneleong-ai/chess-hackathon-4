@@ -1,3 +1,4 @@
+from torch.utils.tensorboard import SummaryWriter
 from cycling_utils import TimestampedTimer
 
 timer = TimestampedTimer("Imported TimestampedTimer")
@@ -60,6 +61,8 @@ def main(args, timer):
     world_size = int(os.environ["WORLD_SIZE"]) # Total number of GPUs in the cluster
     args.device_id = int(os.environ["LOCAL_RANK"])  # Rank on local node
     args.is_master = rank == 0  # Master node for saving / reporting
+    if args.is_master:
+        writer= SummaryWriter(log_dir=args.save_dir / "logs")
     torch.cuda.set_device(args.device_id)  # Enables calling 'cuda'
     torch.autograd.set_detect_anomaly(True) 
 
